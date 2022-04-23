@@ -20,7 +20,7 @@ public class Main {
 
     public static String calc (String expression) throws Exception {
 
-        String [] arr = parser(expression);
+        String [] arr = expression.split(" ");
         if (arr.length > 3){
             throw new Exception();
         }
@@ -48,8 +48,6 @@ public class Main {
         }
         int res = 0;
 
-        System.out.printf("a = %s, b = %s\n", a, b);
-
         switch (expr) {
             case "+" -> res = a + b;
             case "-" -> res = a - b;
@@ -65,62 +63,39 @@ public class Main {
         return resultString;
     }
 
-    static String[] parser (String expr){
-        String[] arr = expr.split(" ");
-        return arr;
-    }
-
     static boolean isRoman (String s){
         boolean isRoman = s.contains("I") || s.contains("V") || s.contains("X");
         return isRoman;
     }
 
     static int convertRomeToArab (String input) throws Exception {
-        char[] chars = input.toCharArray();
-
-        System.out.println(chars[0]);
-
-        int res = romanInt.get(chars[0]);
-        int prev;
-        int equalsSimbolCount = 1;
-
-        if (chars.length > 1) {
-            for (int i = 1; i < chars.length; i++) {
-                int next = romanInt.get(chars[i]);
-                prev = romanInt.get(chars[i - 1]);
-
-                if (next < prev) {
-                    res += next;
-                }
-                if (next == prev && equalsSimbolCount < 3) {
-                    res += next;
-                    equalsSimbolCount++;
-                } else if (equalsSimbolCount >= 3){
-                    throw new Exception();
-                }
-                if (next > prev) {
-                    res -= prev;
-                    res += next - prev;
-                }
-            }
-        }
-        return res;
-    }
-
-    static String convertArabToRome (int arabianVal){
-        Map<Integer, String > map = Map.of(1, "I", 2, "II", 3, "III", 4, "IV", 5,"V",
-                6, "VI", 7, "VII", 8, "VIII", 9, "IX", 10, "X");
-
-
         List<RomanInt> romanIntList = new ArrayList<>();
 
         Collections.addAll(romanIntList, RomanInt.values());
 
         romanIntList.sort(Comparator.comparing((RomanInt::getValue)).reversed());
 
-        for (RomanInt ri: romanIntList  ) {
-            System.out.println("NAME: " + ri.name() + "| VAL: " + ri.getValue());
+        int res = 0;
+        int i = 0;
+        while (i < romanIntList.size() && res < 4000){
+            String romanValue = romanIntList.get(i).name();
+            if (input.startsWith(romanValue)){
+                res += romanIntList.get(i).getValue();
+                input = input.substring(romanValue.length());
+            } else i++;
         }
+
+        if (input.length() > 0 || res == 0) throw new Exception();
+
+        return res;
+    }
+
+    static String convertArabToRome (int arabianVal){
+        List<RomanInt> romanIntList = new ArrayList<>();
+
+        Collections.addAll(romanIntList, RomanInt.values());
+
+        romanIntList.sort(Comparator.comparing((RomanInt::getValue)).reversed());
 
         StringBuilder s = new StringBuilder();
         int i = 0;
