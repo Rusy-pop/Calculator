@@ -43,7 +43,7 @@ public class Main {
             b = Integer.parseInt(second);
         }
 
-        if ((a < 1 || a > 10) && (b < 1 || b > 10)){
+        if ((a < 1 || a > 10) || (b < 1 || b > 10)){
             throw new Exception();
         }
         int res = 0;
